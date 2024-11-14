@@ -34,6 +34,6 @@ jobs:
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TRIPEUX_C95F7 }}
+          firebaseServiceAccount: firebase-adminsdk-1lpjf@tripeux-c95f7.iam.gserviceaccount.com
           channelId: live
           projectId: tripeux-c95f7
