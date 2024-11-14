@@ -7,13 +7,13 @@ import {getAnalytics} from 'firebase/analytics';
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 const firebaseConfig = {
-  apiKey: secrets.API_KEY,
-  authDomain: secrets.PROJECT_ID_URL,
-  projectId: secrets.PROJECT_ID,
-  storageBucket: secrets.PROJECT_ID_BUCK,
-  messagingSenderId: secrets.SENDER_ID,
-  appId: secrets.APP_ID,
-  measurementId: secrets.MEASUREMENT_ID,
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.PROJECT_ID_URL,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.PROJECT_ID_BUCK,
+  messagingSenderId: process.env.SENDER_ID,
+  appId: process.env.APP_ID,
+  measurementId: process.env.MEASUREMENT_ID,
 };
 
 // Initialize Firebase
