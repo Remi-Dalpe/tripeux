@@ -1,4 +1,3 @@
-// webpack.config.js
 import path from 'path';
 import {fileURLToPath} from 'url';
 import Dotenv from 'dotenv-webpack';
@@ -8,6 +7,8 @@ import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
 
 const __filename = fileURLToPath(import.meta.url);
 const projectRoot = path.resolve(path.dirname(__filename), '.');
+
+const isCI = process.env.CI === 'true';
 
 export default {
   entry: path.join(projectRoot, 'src', 'index.js'),
@@ -46,27 +47,16 @@ export default {
   plugins: [
     new Dotenv(),
     new CleanWebpackPlugin(),
-    new BundleAnalyzerPlugin(),
+    !isCI && new BundleAnalyzerPlugin(), // Enable only if not in CI
     new CompressionPlugin({
       test: /\.(js|css)$/,
-      threshold: 8192, // Only compress files larger than 8KB
+      threshold: 8192,
     }),
-  ],
-  devServer: {
-    static: {
-      directory: path.join(projectRoot, 'public'), // Folder to serve static files from
-      watch: true, // Enable watching for changes in the static files
-    },
-    hot: true, // Enable Hot Module Replacement (HMR)
-    open: true, // Open the browser automatically
-    port: 4000, // The port to run the dev server on
-    compress: true, // Enable compression for the server
-    watchFiles: ['public/**/*'], // Watch all files in the 'public' directory
-  },
+  ].filter(Boolean), // Filter out null plugins (like BundleAnalyzerPlugin in CI)
   optimization: {
     splitChunks: {
       chunks: 'all',
-      maxSize: 200000, // Split chunks larger than 200KB
+      maxSize: 200000,
       cacheGroups: {
         firebase: {
           test: /[\\/]node_modules[\\/](firebase)[\\/]/,
@@ -84,8 +74,8 @@ export default {
     },
   },
   performance: {
-    hints: 'warning', // 'error' to enforce, or 'warning' to notify without blocking
-    maxAssetSize: 300000, // Set the max size for assets (in bytes)
-    maxEntrypointSize: 300000, // Set the max size for entry points (in bytes)
+    hints: 'warning',
+    maxAssetSize: 300000,
+    maxEntrypointSize: 300000,
   },
 };
