@@ -6,17 +6,14 @@ import {getAnalytics} from 'firebase/analytics';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-const apiKey = process.env.FIREBASE_API_KEY;
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: apiKey,
-  authDomain: 'tripeux-c95f7.firebaseapp.com',
-  projectId: 'tripeux-c95f7',
-  storageBucket: 'tripeux-c95f7.firebasestorage.app',
-  messagingSenderId: '433186978727',
-  appId: '1:433186978727:web:c7f519c88006812c611482',
-  measurementId: 'G-LEJZ3HFHE1',
+  apiKey: secrets.API_KEY,
+  authDomain: secrets.PROJECT_ID_URL,
+  projectId: secrets.PROJECT_ID,
+  storageBucket: secrets.PROJECT_ID_BUCK,
+  messagingSenderId: secrets.SENDER_ID,
+  appId: secrets.APP_ID,
+  measurementId: secrets.MEASUREMENT_ID,
 };
 
 // Initialize Firebase
