@@ -1,30 +1,31 @@
 'use strict';
 
-// Import the functions you need from the SDKs you need
-import {initializeApp} from 'firebase/app';
-import {getAnalytics} from 'firebase/analytics';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import './styles/style.css';
 
+// Import the Firebase functions you need
+const {initializeApp} = import('firebase/app');
+const {getAnalytics} = import('firebase/analytics');
+
+// Firebase configuration
 const firebaseConfig = {
-  apiKey: process.env.API_KEY,
-  authDomain: process.env.PROJECT_ID_URL,
-  projectId: process.env.PROJECT_ID,
-  storageBucket: process.env.PROJECT_ID_BUCK,
-  messagingSenderId: process.env.SENDER_ID,
-  appId: process.env.APP_ID,
-  measurementId: process.env.MEASUREMENT_ID,
+  apiKey: 'AIzaSyDN18Aw6t5n_doGesWogkX1_mlFwGsQFWg',
+  authDomain: 'tripeux-c95f7.firebaseapp.com',
+  projectId: 'tripeux-c95f7',
+  storageBucket: 'tripeux-c95f7.firebasestorage.app',
+  messagingSenderId: '433186978727',
+  appId: '1:433186978727:web:c7f519c88006812c611482',
+  measurementId: 'G-LEJZ3HFHE1',
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-console.log(analytics);
+console.log('Analytics initialized:', analytics);
 
-import './styles/style.css';
-import './scripts/auth.js';
-import './scripts/cal.js';
-import './scripts/modals.js';
-import './scripts/perf.js';
-import './scripts/slider.js';
-import './scripts/user.js';
+// Dynamically import other modules after Firebase initializes
+import('./scripts/auth.js');
+import('./scripts/cal.js');
+import('./scripts/modals.js');
+import('./scripts/lazy-load.js');
+import('./scripts/slider.js');
+import('./scripts/user.js');

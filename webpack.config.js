@@ -1,32 +1,37 @@
 import path from 'path';
 import {fileURLToPath} from 'url';
-import Dotenv from 'dotenv-webpack';
-import {CleanWebpackPlugin} from 'clean-webpack-plugin';
-import CompressionPlugin from 'compression-webpack-plugin';
-import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import ImageMinimizerPlugin from 'image-minimizer-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
+// Convert `import.meta.url` to a file path
 const __filename = fileURLToPath(import.meta.url);
-const projectRoot = path.resolve(path.dirname(__filename), '.');
-
-const isCI = process.env.CI === 'true';
+const __dirname = path.dirname(__filename);
+const projectRoot = __dirname;
 
 export default {
-  entry: path.join(projectRoot, 'src', 'index.js'),
+  entry: './src/index.js',
   mode: 'production',
   output: {
-    path: path.join(projectRoot, 'dist'),
-    filename: '[name].bundle.js',
+    path: path.resolve(projectRoot, 'dist'),
+    filename: '[name].[contenthash].js',
   },
   module: {
     rules: [
       {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'img/[name].[hash][ext]',
+        },
+      },
+      {
         test: /\.html$/,
-        use: [
-          {
-            loader: 'html-loader',
-            options: {minimize: true},
-          },
-        ],
+        use: 'html-loader',
+      },
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
       {
         test: /\.js$/,
@@ -38,31 +43,40 @@ export default {
           },
         },
       },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
     ],
   },
   plugins: [
-    new Dotenv(),
-    new CleanWebpackPlugin(),
-    !isCI && new BundleAnalyzerPlugin(), // Enable only if not in CI
-    new CompressionPlugin({
-      test: /\.(js|css)$/,
-      threshold: 8192,
+    new HtmlWebpackPlugin({
+      template: './public/index.html',
+      filename: 'index.html',
+      inject: 'body',
     }),
-  ].filter(Boolean), // Filter out null plugins (like BundleAnalyzerPlugin in CI)
+    new MiniCssExtractPlugin({
+      filename: 'styles/[name].[contenthash].css',
+    }),
+    new ImageMinimizerPlugin({
+      minimizer: {
+        implementation: ImageMinimizerPlugin.imageminGenerate,
+        options: {
+          plugins: [
+            ['imagemin-mozjpeg', {quality: 75}],
+            ['imagemin-pngquant', {quality: [0.65, 0.8]}],
+          ],
+        },
+      },
+    }),
+  ],
   optimization: {
     splitChunks: {
       chunks: 'all',
       maxSize: 200000,
       cacheGroups: {
+        default: false,
         firebase: {
-          test: /[\\/]node_modules[\\/](firebase)[\\/]/,
+          test: /[\\/]node_modules[\\/]firebase[\\/]/,
           name: 'firebase',
           chunks: 'all',
-          priority: 10,
+          enforce: true,
         },
         fullcalendar: {
           test: /[\\/]node_modules[\\/](@fullcalendar)[\\/]/,
@@ -70,12 +84,26 @@ export default {
           chunks: 'all',
           priority: 10,
         },
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+        },
       },
     },
   },
   performance: {
-    hints: 'warning',
-    maxAssetSize: 300000,
-    maxEntrypointSize: 300000,
+    maxAssetSize: 400000,
+    maxEntrypointSize: 400000,
+  },
+  devServer: {
+    static: path.join(projectRoot, 'dist'),
+    port: 8080,
+    open: true,
+    compress: true,
+    hot: false,
+  },
+  stats: {
+    children: true,
   },
 };
