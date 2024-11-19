@@ -1,7 +1,6 @@
 import path from 'path';
 import {fileURLToPath} from 'url';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import ImageMinimizerPlugin from 'image-minimizer-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 // Convert `import.meta.url` to a file path
@@ -15,6 +14,7 @@ export default {
   output: {
     path: path.resolve(projectRoot, 'dist'),
     filename: '[name].[contenthash].js',
+    clean: true, // Ensures the output directory is cleaned on each build
   },
   module: {
     rules: [
@@ -22,12 +22,27 @@ export default {
         test: /\.(png|jpe?g|gif|svg)$/i,
         type: 'asset/resource',
         generator: {
-          filename: 'img/[name].[hash][ext]',
+          filename: 'img/[name][hash][ext]',
         },
       },
       {
         test: /\.html$/,
-        use: 'html-loader',
+        use: [
+          {
+            loader: 'html-loader',
+            options: {
+              sources: {
+                list: [
+                  {
+                    tag: 'img',
+                    attribute: 'src',
+                    type: 'src',
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         test: /\.css$/,
@@ -49,21 +64,9 @@ export default {
     new HtmlWebpackPlugin({
       template: './public/index.html',
       filename: 'index.html',
-      inject: 'body',
     }),
     new MiniCssExtractPlugin({
       filename: 'styles/[name].[contenthash].css',
-    }),
-    new ImageMinimizerPlugin({
-      minimizer: {
-        implementation: ImageMinimizerPlugin.imageminGenerate,
-        options: {
-          plugins: [
-            ['imagemin-mozjpeg', {quality: 75}],
-            ['imagemin-pngquant', {quality: [0.65, 0.8]}],
-          ],
-        },
-      },
     }),
   ],
   optimization: {
