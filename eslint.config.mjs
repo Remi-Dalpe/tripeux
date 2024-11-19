@@ -5,6 +5,7 @@ import tsParser from '@typescript-eslint/parser';
 
 export default [
   {
+    files: ['**/*.js'],
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -38,6 +39,6 @@ export default [
       quotes: ['error', 'single'],
       semi: ['error', 'always'],
     },
-    ignores: ['__tests__/**', 'public/dist/**'],
+    ignores: ['__tests__/**', 'dist/**'],
   },
 ];

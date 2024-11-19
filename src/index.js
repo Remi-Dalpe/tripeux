@@ -2,10 +2,6 @@
 
 import './styles/style.css';
 
-// Import the Firebase functions you need
-const {initializeApp} = import('firebase/app');
-const {getAnalytics} = import('firebase/analytics');
-
 // Firebase configuration
 const firebaseConfig = {
   apiKey: 'AIzaSyDN18Aw6t5n_doGesWogkX1_mlFwGsQFWg',
@@ -17,15 +13,22 @@ const firebaseConfig = {
   measurementId: 'G-LEJZ3HFHE1',
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-console.log('Analytics initialized:', analytics);
+// Asynchronous imports and Firebase initialization
+(async () => {
+  const {initializeApp} = await import('firebase/app');
+  const {getAnalytics} = await import('firebase/analytics');
 
-// Dynamically import other modules after Firebase initializes
-import('./scripts/auth.js');
-import('./scripts/cal.js');
-import('./scripts/modals.js');
-import('./scripts/lazy-load.js');
-import('./scripts/slider.js');
-import('./scripts/user.js');
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  console.log('Analytics initialized');
+
+  // Dynamically import other modules
+  await Promise.all([
+    import('./scripts/auth.js'),
+    import('./scripts/cal.js'),
+    import('./scripts/modals.js'),
+    import('./scripts/lazy-load.js'),
+    import('./scripts/slider.js'),
+    import('./scripts/user.js'),
+  ]);
+})();
