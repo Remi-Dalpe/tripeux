@@ -1,5 +1,6 @@
 import path from 'path';
 import {fileURLToPath} from 'url';
+import Dotenv from 'dotenv-webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
@@ -61,6 +62,7 @@ export default {
     ],
   },
   plugins: [
+    new Dotenv(),
     new HtmlWebpackPlugin({
       template: './public/index.html',
       filename: 'index.html',
