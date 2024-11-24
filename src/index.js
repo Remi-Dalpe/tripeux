@@ -1,6 +1,6 @@
 'use strict';
 
-import './styles/style.css';
+import '../src/styles/style.css';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -13,22 +13,12 @@ const firebaseConfig = {
   measurementId: 'G-LEJZ3HFHE1',
 };
 
-// Asynchronous imports and Firebase initialization
+// Asynchronous Firebase initialization
 (async () => {
   const {initializeApp} = await import('firebase/app');
-  const {getAnalytics} = await import('firebase/analytics');
+  // const {getAnalytics} = await import('firebase/analytics');
 
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  console.log('Analytics initialized', analytics);
-
-  // Dynamically import other modules
-  await Promise.all([
-    import('./scripts/auth.js'),
-    import('./scripts/cal.js'),
-    import('./scripts/modals.js'),
-    import('./scripts/lazy-load.js'),
-    import('./scripts/slider.js'),
-    import('./scripts/user.js'),
-  ]);
+  // const app =
+  initializeApp(firebaseConfig);
+  // getAnalytics(app);
 })();

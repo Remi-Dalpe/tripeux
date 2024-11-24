@@ -22,10 +22,10 @@
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "babel-loader": "^9.2.1",
+    "copy-webpack-plugin": "^12.0.2",
     "dotenv-webpack": "^8.1.0",
     "eslint": "^9.14.0",
     "globals": "^15.12.0",
-    "html-webpack-plugin": "^5.6.3",
     "mini-css-extract-plugin": "^2.9.2",
     "style-loader": "^4.0.0",
     "webpack": "^5.96.1",
@@ -38,6 +38,7 @@
     "css-loader": "^7.1.2",
     "dotenv": "^16.4.5",
     "firebase": "^11.0.1",
-    "html-loader": "^5.1.0"
+    "html-loader": "^5.1.0",
+    "html-webpack-plugin": "^5.6.3"
   }
 }

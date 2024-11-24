@@ -3,6 +3,7 @@ import {fileURLToPath} from 'url';
 import Dotenv from 'dotenv-webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 // Convert `import.meta.url` to a file path
 const __filename = fileURLToPath(import.meta.url);
@@ -20,13 +21,6 @@ export default {
   module: {
     rules: [
       {
-        test: /\.(png|jpe?g|gif|svg)$/i,
-        type: 'asset/resource',
-        generator: {
-          filename: 'img/[name][hash][ext]',
-        },
-      },
-      {
         test: /\.html$/,
         use: [
           {
@@ -34,16 +28,20 @@ export default {
             options: {
               sources: {
                 list: [
-                  {
-                    tag: 'img',
-                    attribute: 'src',
-                    type: 'src',
-                  },
+                  {tag: 'img', attribute: 'src', type: 'src'},
+                  {tag: 'img', attribute: 'data-src', type: 'src'},
                 ],
               },
             },
           },
         ],
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'img/[name][hash][ext]',
+        },
       },
       {
         test: /\.css$/,
@@ -63,12 +61,15 @@ export default {
   },
   plugins: [
     new Dotenv(),
-    new HtmlWebpackPlugin({
-      template: './public/index.html',
-      filename: 'index.html',
-    }),
     new MiniCssExtractPlugin({
-      filename: 'styles/[name].[contenthash].css',
+      filename: '[name].[contenthash].css',
+    }),
+    new CopyWebpackPlugin({
+      patterns: [{from: './private', to: 'private'}],
+    }),
+    new HtmlWebpackPlugin({
+      template: './public/index.html', // Ensure this points to your HTML template
+      filename: 'index.html', // Output to dist/index.html
     }),
   ],
   optimization: {
